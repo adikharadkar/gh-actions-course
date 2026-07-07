@@ -7,9 +7,14 @@ on:
         default: false
         description: "Skip deployment and only print build outputs"
       target:
-        type: environment
+        type: choice
+        options:
+          - "development"
+          - "staging"
+          - "production"
         required: true
         description: "Which environment the workflow will target"
+
       tag:
         type: choice
         options:
@@ -20,12 +25,12 @@ on:
         description: "Release from which to build and deploy"
 jobs:
   build:
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
       - name: Build the project
         run: echo "Building the project for tag ${{ inputs.tag }}..."
   deploy:
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     if: ${{ !inputs.dry-run }}
     environment: ${{ inputs.target }}
     needs: build
